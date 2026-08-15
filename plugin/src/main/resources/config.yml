@@ -1,0 +1,134 @@
+# ═══════════════════════════════════════════════════════════════
+#   ФПВ Дрон — вид от первого лица
+#   Взлёт: меню дрона → «Лететь от лица дрона»
+#   Управление: куда смотрите — туда летит. Shift — подрыв.
+#   После правки: /fpv reload
+# ═══════════════════════════════════════════════════════════════
+
+# ───────────────────────────────────────────────── РЕЦЕПТ КРАФТА
+recipe:
+  enabled: true
+  row1: "IRON_INGOT, SPYGLASS, REDSTONE_BLOCK"
+  row2: "STRING, PHANTOM_MEMBRANE, STRING"
+  row3: "COBWEB, DISPENSER, COBWEB"
+  # В центре должен лежать именно дрон-камикадзе из плагина KamikazeDrone,
+  # а не обычная мембрана. Проверка по внутренней метке предмета.
+  require-kamikaze-tag: true
+  kamikaze-tag: "kamikazedrone:kamikaze_drone"
+
+# ───────────────────────────────────────────────────── ПРЕДМЕТ
+item:
+  material: "SPYGLASS"
+  name: "&b&lФПВ Дрон"
+  glow: true
+  lore:
+    - "&7Поставьте и войдите в режим пилота."
+    - "&7Летит туда, куда смотрите."
+    - "&8Оптоволокно тянется следом."
+  entity-name: "&b✈ ФПВ Дрон"
+  show-name-always: true
+
+# ───────────────────────────────────────────────────────── ПОЛЁТ
+flight:
+  speed-blocks-per-second: 10.0   # жёсткий потолок скорости
+  fly-speed: 0.08                 # чувствительность WASD. Выше = быстрее и резче
+  # Как держать потолок скорости:
+  #   SOFT — осаживать только при явном превышении (плавно, рекомендуется)
+  #   OFF  — не ограничивать вовсе (максимально гладко, но можно разогнаться колёсиком)
+  limit-mode: "SOFT"
+  speed-tolerance: 1.8            # запас перед вмешательством. Больше = глаже
+  max-range: 500            # дальше — обрыв связи и подрыв
+  max-seconds: 90           # заряд батареи
+  water-kills: true
+
+controls:
+  double-sneak-ms: 450      # окно двойного Shift для подрыва
+
+# ───────────────────────────────────────── ПОВТОР ПОСЛЕ ПОДРЫВА
+replay:
+  enabled: true
+  seconds: 4.0              # длительность облёта
+  height: 12                # высота камеры над маршрутом
+  back-distance: 18         # отставание камеры
+  trail-blocks: 35          # какой отрезок захода показывать
+
+# ─────────────────────────────────────────────────────── ПАУТИНА
+web:
+  speed-multiplier: 0.15    # во сколько раз медленнее в паутине
+  can-trap: true            # застревает ли насмерть
+  stuck-seconds: 3.0        # сколько барахтается до потери дрона
+
+# ─────────────────────────────────────────────── ОПТОВОЛОКНО
+fiber:
+  enabled: true
+  particle: "CRIT"          # чем рисуем нить
+  point-step: 2.0           # шаг записи маршрута, в блоках
+  max-points: 400           # длина «катушки»
+  density: 0.6              # плотность частиц вдоль нити
+  draw-every-ticks: 4       # как часто перерисовывать
+  render-distance: 48       # рисуем только рядом с камерой
+
+# ───────────────────────────────────────────────────────── ВЗРЫВ
+explosion:
+  power: 4.0
+  break-blocks: true        # ВЫКЛЮЧИТЕ на сервере с постройками
+  set-fire: false
+
+# ──────────────────────────────────────────────────── САМ ДРОН
+drone:
+  health: 4.0
+  max-per-player: 2
+  arrow-instant-kill: true
+  explode-when-shot: false
+
+# ───────────────────────────────────────────── ЗВУК И ЧАСТИЦЫ
+effects:
+  trail-particle: "SMOKE_NORMAL"
+  trail-count: 1
+  engine-sound: "ENTITY_BEE_LOOP_AGGRESSIVE"
+  engine-volume: 0.9
+  engine-pitch: 1.9
+  engine-interval-ticks: 5
+  launch-sound: "ENTITY_BEE_LOOP_AGGRESSIVE"
+  fizzle-sound: "ENTITY_GENERIC_EXTINGUISH_FIRE"
+  fizzle-particle: "SMOKE_LARGE"
+
+hud:
+  enabled: true
+
+menu:
+  title: "&8Пульт FPV"
+  fly-name: "&b&lЛететь от лица дрона"
+  info-name: "&e&lИнформация"
+  boom-name: "&c&lПодорвать на месте"
+  pickup-name: "&6&lЗабрать дрон"
+  filler: "GRAY_STAINED_GLASS_PANE"
+
+protection:
+  worlds-blacklist:
+    - "spawn"
+  no-grief-worlds: []
+
+# ─────────────────────────────────────────────── СООБЩЕНИЯ
+messages:
+  placed: "&aФПВ-дрон установлен. Кликните по нему правой кнопкой."
+  takeoff: "&aВы в очках. &fWASD &7— полёт, &fпробел/Shift &7— выше и ниже, &cдвойной Shift &7— подрыв."
+  replay-start: "&7Повтор захода…"
+  replay-hud: "&7◉ повтор"
+  hud: "&b✈ &fот точки &e{dist} &fбл. &7· батарея {sec} с {web}"
+  hud-web: "&c&lПАУТИНА"
+  hit: "&cДетонация в точке {x} {y} {z}"
+  signal-lost: "&cСигнал потерян. Вы вернулись в тело."
+  lost-battery: "&cБатарея села, дрон сдетонировал."
+  lost-range: "&cОбрыв связи — дрон сдетонировал."
+  web-trapped: "&cДрон запутался в паутине."
+  already-flying: "&cЭтот дрон уже в полёте."
+  already-piloting: "&cВы уже управляете дроном."
+  not-yours: "&cЭто не ваш дрон."
+  drone-gone: "&cДрона больше нет."
+  picked-up: "&aДрон убран в инвентарь."
+  too-many: "&cУ вас уже {n} дронов."
+  you-shot-down: "&aВы сбили ФПВ-дрон!"
+  no-permission: "&cНет прав на ФПВ-дроны."
+  world-blocked: "&cВ этом мире дроны запрещены."
+  recovered: "&eВы возвращены в тело после сбоя связи."

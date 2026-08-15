@@ -1,0 +1,20 @@
+name: FpvDrone
+version: '${project.version}'
+main: ru.factor.fpv.FpvPlugin
+api-version: '1.20'
+author: ZovPatriot
+description: FPV-дрон с видом от первого лица и оптоволоконной нитью.
+softdepend: [KamikazeDrone]
+
+commands:
+  fpv:
+    description: Управление FPV-дронами
+    usage: /fpv <give|land|boom|rescue|reload>
+
+permissions:
+  fpv.use:
+    description: Ставить и пилотировать FPV-дроны
+    default: true
+  fpv.admin:
+    description: Команды give, rescue, reload
+    default: op
